@@ -1,0 +1,10 @@
+
+INTRO: |
+  Instructions:
+  This is an enhanced LLM search and should only be used for complex problems that LLM's can't regularly solve.
+  If you would like to exit the program type "/exit" and the program will terminate.
+
+START: 'Please enter a problem for the bot to solve:'
+  
+
+END: 'Has the bot accurately and completely answered the request? [Y/N]: '
