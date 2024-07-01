@@ -1,0 +1,24 @@
+PROMPTS:
+
+  INITIAL: |
+    You have been tasked with finding a solution to the following problem:
+
+    {Problem}
+
+    Please think of the next logical step to solve this problem. 
+    You will be given multiple iterations to complete the problem.
+    Please come up with an appropriate approach to solve this problem.
+
+
+  THINK: |
+    You are in the middle of solving this problem:
+
+    {problem}
+
+    Your previous thoughts on the matter are as follows:
+
+    {thoughts}
+
+    Based on the problem and your previous work, what is the next best step to take to solve this problem?
+    Think about the next best step critically and then perform that action.
+
