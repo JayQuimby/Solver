@@ -2,6 +2,7 @@ from typing import List
 from ToT.util import query_local_llm, load_yaml, extract_score
 
 PROMPTS = {**load_yaml('model', './ToT/prompts/')}
+SCORE_THRESH = 0.99
 
 class ThoughtNode:
     def __init__(self, thought, goal, parent=None) -> None:
@@ -21,16 +22,14 @@ class ThoughtNode:
         if self.parent is None:
             return self.thought  
         else:
-            return self.thought_helper(depth + 1) + f'\nStep {depth}:\n' + self.thought
+            return self.parent.thought_helper(depth + 1) \
+                    + f'\nStep {depth}:\n' \
+                    + self.thought
 
     def score(self, problem) -> None:
         prompt: str = PROMPTS['SCORE'].format(problem=problem, thoughts=self.get_thought_process())
-        scores: list[float] = []
-        for _ in range(3):
-            response, _ = query_local_llm(prompt)
-            sc = extract_score(response)
-            scores.append(sc)
-        self.score: float = sum(scores)/len(scores)
+        response, _ = query_local_llm(prompt)
+        self.score: float = extract_score(response)
 
     def add_child(self, t: str, g:str) -> None:
         node = ThoughtNode(t, g, parent=self)
@@ -38,11 +37,12 @@ class ThoughtNode:
 
     def generate_children(self, problem) -> None:
         prompt: str = PROMPTS['THINK'].format(problem=problem, thoughts=self.get_thought_process())
-        num_nodes = max(0, int(self.max_width * self.score)//10)
-
+        num_nodes = max(0, int(self.max_width * self.score)//10) if self.parent is not None else self.max_width
+        print(f'Generating {num_nodes} ')
         for _ in range(num_nodes):
             cur_t, _ = query_local_llm(prompt)
             self.add_child(cur_t, problem)
+        
 
 
 class ThoughtTree:
@@ -50,6 +50,9 @@ class ThoughtTree:
         self.problem = problem
         self.max_depth = max_depth
         self.beam_width = beam_width
+
+    def __str__(self):
+        return f'Main Goal:\n{self.problem}\n\nMax Depth: {self.max_depth}\n\nBeam Width: {self.beam_width}'
 
     def get_root(self):
         resp, _ = query_local_llm(PROMPTS['START'].format(problem=self.problem))
@@ -65,6 +68,11 @@ class ThoughtTree:
             
             current_level = sorted(next_level, key=lambda x: x.score, reverse=True)[:self.beam_width]
             if not current_level:
+                print(f'Tree incomplete at depth {depth}')
+                break
+
+            elif current_level[0].score >= SCORE_THRESH:
+                print('Possible solution found!')
                 break
 
     def best_solution(self) -> str:
@@ -84,7 +92,7 @@ class ThoughtTree:
 
         print_node(self.root, 0)
 
-    def solve(self) -> str:
+    def think(self) -> str:
         self.get_root()
         self.grow()
         return self.best_solution()

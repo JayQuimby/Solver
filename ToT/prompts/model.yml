@@ -1,7 +1,7 @@
 START: |
   You have been tasked with finding a solution to the following problem:
 
-  {Problem}
+  {problem}
 
   Please think of the next logical step to solve this problem. 
   You will be given multiple iterations to complete the problem.
@@ -20,16 +20,17 @@ THINK: |
   Think about the next best step critically and then perform that action.
 
 SCORE: |
-  You are in the middle of solving this problem:
+  You are checking your work for the current problem:
 
   {problem}
 
-  This is the work that you just produced:
+  This is the work that was just produced:
 
   {thoughts}
 
   Based on the problem and the previous thoughts please be critical of your answer and try to determine if it is correct or not.
   Do not trust the explanation or justification of the previous work just try and verify the integrity of the claims made.
   Once you have completed your verification step please output a score to reflect your sentiment of the validity of the claims made.
-  please format the score like this 'Score: [Value 0-10]' 
-
+  Please format the score like this 'Score: [Value 0-1]' 
+  A score of 0 means there is nothing correct in the solution and a score of 1 indicates the solution is correct.
+  Your score must be in the range [0.0, 1.0] use the decimal place to approximate the level of correctness.

@@ -42,7 +42,7 @@ def format_msg(msg) -> list[dict[str, str]]:
         return [{"role": "user", "content": str(msg)}]
 
 
-def query_local_llm(msgs, limit=4000, model_name='codestral', port=11434) -> Tuple[str, float]:
+def query_local_llm(msgs, limit=4000, model_name='llama3', port=11434) -> Tuple[str, float]:
     '''
     Input:
         msgs: A list of strings or a string that will be given to the LLM.
