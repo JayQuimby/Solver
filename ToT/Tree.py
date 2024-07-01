@@ -47,7 +47,44 @@ class ThoughtNode:
 
 class ThoughtTree:
     def __init__(self, problem, max_depth=3, beam_width=3) -> None:
-        self.root = ThoughtNode(problem)
+        self.problem = problem
         self.max_depth = max_depth
         self.beam_width = beam_width
-        self.starter = PROMPTS['START'].format(problem=problem)
+
+    def get_root(self):
+        resp, _ = query_local_llm(PROMPTS['START'].format(problem=self.problem))
+        self.root = ThoughtNode(resp, self.problem)
+
+    def grow(self) -> None:
+        current_level = [self.root]
+        for depth in range(self.max_depth):
+            next_level = []
+            for node in current_level:
+                node.generate_children(self.problem)
+                next_level.extend(node.children)
+            
+            current_level = sorted(next_level, key=lambda x: x.score, reverse=True)[:self.beam_width]
+            if not current_level:
+                break
+
+    def best_solution(self) -> str:
+        def dfs(node: ThoughtNode) -> ThoughtNode:
+            if not node.children:
+                return node
+            return max((dfs(child) for child in node.children), key=lambda x: x.score)
+
+        best_node = dfs(self.root)
+        return best_node.get_thought_process()
+
+    def visualize(self) -> None:
+        def print_node(node: ThoughtNode, depth: int) -> None:
+            print('  ' * depth + f"- {node.thought[:50]}... (Score: {node.score:.2f})")
+            for child in node.children:
+                print_node(child, depth + 1)
+
+        print_node(self.root, 0)
+
+    def solve(self) -> str:
+        self.get_root()
+        self.grow()
+        return self.best_solution()
