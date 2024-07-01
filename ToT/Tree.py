@@ -25,8 +25,6 @@ class ThoughtNode:
         
         return self.thought if self.parent is None else thought_helper(2) + f'\nStep 1\n' + self.thought
 
-    
-
     @staticmethod
     def extract_score(response) -> float:
         pattern = r"Score:\s*(\d+(?:\.\d+)?)"
@@ -59,7 +57,7 @@ class ThoughtNode:
 
 
 class ThoughtTree:
-    def __init__(self, problem, model='codestral', max_depth=3, beam_width=3) -> None:
+    def __init__(self, problem, max_depth=3, beam_width=3) -> None:
         self.root = ThoughtNode(problem)
         self.max_depth = max_depth
         self.beam_width = beam_width

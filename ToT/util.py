@@ -1,4 +1,11 @@
-import requests
+from requests import post
+from yaml import safe_load
+
+def load_yaml(name: str, BASE: str='./'):
+    """returns the contents of a yaml file as a dict"""
+    with open(BASE + name + '.yml', 'r') as file:
+        data = safe_load(file)
+    return data
 
 def format_msg(msg): 
     if type(msg) is list:
@@ -19,7 +26,7 @@ def query_local_llm(msgs, limit=4000, model_name='codestral') -> tuple[str, floa
         }
     }
 
-    response = requests.post(url, json=payload)
+    response = post(url, json=payload)
     if response.status_code == 200:
         generation_dict = dict(response.json())
         comp_tok = generation_dict.get('eval_count', 0)

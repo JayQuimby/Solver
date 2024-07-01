@@ -1,0 +1,35 @@
+INITIAL: |
+  You have been tasked with finding a solution to the following problem:
+
+  {Problem}
+
+  Please think of the next logical step to solve this problem. 
+  You will be given multiple iterations to complete the problem.
+  Please come up with an appropriate approach to solve this problem.
+
+THINK: |
+  You are in the middle of solving this problem:
+
+  {problem}
+
+  Your previous thoughts on the matter are as follows:
+
+  {thoughts}
+
+  Based on the problem and your previous work, what is the next best step to take to solve this problem?
+  Think about the next best step critically and then perform that action.
+
+SCORE: |
+  You are in the middle of solving this problem:
+
+  {problem}
+
+  This is the work that you just produced:
+
+  {thoughts}
+
+  Based on the problem and the previous thoughts please be critical of your answer and try to determine if it is correct or not.
+  Do not trust the explanation or justification of the previous work just try and verify the integrity of the claims made.
+  Once you have completed your verification step please output a score to reflect your sentiment of the validity of the claims made.
+  please format the score like this 'Score: [Value 0-10]' 
+
