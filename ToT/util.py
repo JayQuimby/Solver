@@ -6,11 +6,11 @@ def format_msg(msg):
     else:
         return [{"role": "user", "content": str(msg)}]
 
-def query_local_llm(msgs, limit=4000) -> tuple[str, float]:
+def query_local_llm(msgs, limit=4000, model_name='codestral') -> tuple[str, float]:
     # Replace with your actual server address and port
     url = "http://0.0.0.0:11434/api/chat/"
     payload = {
-        "model": 'codestral',
+        "model": model_name,
         "messages" : format_msg(msgs),
         "stream": False,
         "options": {

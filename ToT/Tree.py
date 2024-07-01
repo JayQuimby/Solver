@@ -1,6 +1,6 @@
 import re
 from typing import List
-from util import query_local_llm
+from ToT.util import query_local_llm
 
 class ThoughtNode:
     def __init__(self, thought, goal, parent=None) -> None:
@@ -19,11 +19,13 @@ class ThoughtNode:
     '''
 
     def get_thought_process(self) -> str:
-        return self.thought if self.parent is None else self.parent.thought_helper(2) + f'\nStep 1\n' + self.thought
 
-    def thought_helper(self, depth):
-        return self.thought if self.parent is None else self.parent.thought_helper(depth + 1) + f'\nStep {depth}:\n' + self.thought
+        def thought_helper(node: ThoughtNode, depth: int) -> str:
+            return node.thought if node.parent is None else thought_helper(depth + 1) + f'\nStep {depth}:\n' + node.thought
+        
+        return self.thought if self.parent is None else thought_helper(2) + f'\nStep 1\n' + self.thought
 
+    
 
     @staticmethod
     def extract_score(response) -> float:
@@ -57,7 +59,7 @@ class ThoughtNode:
 
 
 class ThoughtTree:
-    def __init__(self, problem, max_depth=3, beam_width=3) -> None:
+    def __init__(self, problem, model='codestral', max_depth=3, beam_width=3) -> None:
         self.root = ThoughtNode(problem)
         self.max_depth = max_depth
         self.beam_width = beam_width
@@ -68,4 +70,3 @@ class ThoughtTree:
             response, _ = query_local_llm(prompt)
             thoughts = response.strip()
             node.add_child(thoughts)
-        return node
