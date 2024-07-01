@@ -14,7 +14,7 @@ def main():
 
         solver = ThoughtTree(req)
         
-        answer = solver.solve()
+        answer = solver.think()
         print(f'The bot has come up with the following answer:\n\n{answer}')
 
         affirm = input(verify_answer)
