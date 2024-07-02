@@ -42,7 +42,6 @@ class ThoughtNode:
         for _ in range(num_nodes):
             cur_t, _ = query_local_llm(prompt)
             self.add_child(cur_t, problem)
-        
 
 
 class ThoughtTree:
@@ -55,10 +54,13 @@ class ThoughtTree:
         return f'Main Goal:\n{self.problem}\n\nMax Depth: {self.max_depth}\n\nBeam Width: {self.beam_width}'
 
     def get_root(self):
+        print('Generating Root Node')
         resp, _ = query_local_llm(PROMPTS['START'].format(problem=self.problem))
+        print('Scoring root node')
         self.root = ThoughtNode(resp, self.problem)
 
     def grow(self) -> None:
+        print('Growing Solution Tree')
         current_level = [self.root]
         for depth in range(self.max_depth):
             print(f'Starting depth {depth}')
@@ -68,7 +70,7 @@ class ThoughtTree:
                 node.generate_children(self.problem)
                 next_level.extend(node.children)
             
-            current_level = sorted(next_level, key=lambda x: x.score, reverse=True)[:self.beam_width]
+            current_level = sorted(next_level, key=lambda x: x.score, reverse=True)
             if not current_level:
                 print(f'Tree incomplete at depth {depth}')
                 break
