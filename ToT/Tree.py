@@ -61,8 +61,10 @@ class ThoughtTree:
     def grow(self) -> None:
         current_level = [self.root]
         for depth in range(self.max_depth):
+            print(f'Starting depth {depth}')
             next_level = []
-            for node in current_level:
+            for ind, node in enumerate(current_level):
+                print(f'Generating branch {ind}')
                 node.generate_children(self.problem)
                 next_level.extend(node.children)
             
@@ -89,7 +91,6 @@ class ThoughtTree:
             print('  ' * depth + f"- {node.thought[:50]}... (Score: {node.score:.2f})")
             for child in node.children:
                 print_node(child, depth + 1)
-
         print_node(self.root, 0)
 
     def think(self) -> str:

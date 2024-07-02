@@ -3,6 +3,8 @@ from yaml import safe_load
 from typing import Tuple
 from re import findall, MULTILINE
 
+DEFAULT_MODEL = 'phi3:3.8b-mini-instruct-4k-q4_K_M'
+
 def extract_score(response) -> float:
         pattern = r"Score:\s*(\d+(?:\.\d+)?)"
         matches = findall(pattern, response, MULTILINE)
@@ -42,7 +44,7 @@ def format_msg(msg) -> list[dict[str, str]]:
         return [{"role": "user", "content": str(msg)}]
 
 
-def query_local_llm(msgs, limit=4000, model_name='llama3', port=11434) -> Tuple[str, float]:
+def query_local_llm(msgs, limit=4000, model_name=DEFAULT_MODEL, port=11434) -> Tuple[str, float]:
     '''
     Input:
         msgs: A list of strings or a string that will be given to the LLM.

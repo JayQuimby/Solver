@@ -9,7 +9,7 @@ verify_answer = prompts['END']
 
 def main():
     req = input(instructions + user_prompt)
-
+    print('\n\nStarting problem solver...')
     while req.strip() != '/exit':
 
         solver = ThoughtTree(req)
