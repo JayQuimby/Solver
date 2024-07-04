@@ -36,6 +36,7 @@ class ThoughtNode:
         self.children.append(node)
 
     def generate_children(self, problem) -> None:
+        # possible issue here
         prompt: str = PROMPTS['THINK'].format(problem=problem, thoughts=self.get_thought_process())
         num_nodes = max(0, int(self.max_width * self.score)//10) if self.parent is not None else self.max_width
         print(f'Generating {num_nodes} ')
@@ -60,6 +61,7 @@ class ThoughtTree:
         self.root = ThoughtNode(resp, self.problem)
 
     def grow(self) -> None:
+        # possible bug 
         print('Growing Solution Tree')
         current_level = [self.root]
         for depth in range(self.max_depth):
