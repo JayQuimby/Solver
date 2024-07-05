@@ -3,7 +3,7 @@ from yaml import safe_load
 from typing import Tuple
 from re import findall, MULTILINE
 
-DEFAULT_MODEL = 'phi3:3.8b-mini-instruct-4k-q4_K_M'
+DEFAULT_MODEL = 'tinyllama'
 
 def extract_score(response) -> float:
         pattern = r"Score:\s*(\d+(?:\.\d+)?)"
@@ -27,7 +27,6 @@ def load_yaml(name: str, BASE: str='./') -> dict[str, str]:
         data = safe_load(file)
     return data
 
-
 def format_msg(msg) -> list[dict[str, str]]:
     '''
     Input:
@@ -43,8 +42,7 @@ def format_msg(msg) -> list[dict[str, str]]:
     else:
         return [{"role": "user", "content": str(msg)}]
 
-
-def query_local_llm(msgs, limit=4000, model_name=DEFAULT_MODEL, port=11434) -> Tuple[str, float]:
+def query_local_llm(msgs, limit=4000, model_name=DEFAULT_MODEL, port=11434, temp=0.3) -> Tuple[str, float]:
     '''
     Input:
         msgs: A list of strings or a string that will be given to the LLM.
@@ -64,7 +62,7 @@ def query_local_llm(msgs, limit=4000, model_name=DEFAULT_MODEL, port=11434) -> T
         "messages" : format_msg(msgs),
         "stream": False,
         "options": {
-            "temperature": 0.3,
+            "temperature": temp,
             "num_predict": limit,
         }
     }
