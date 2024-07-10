@@ -97,6 +97,8 @@ class ThoughtTree:
                 print_node(child, depth + 1)
         print_node(self.root, 0)
 
+    # need to expand on the thinking process.
+
     def think(self) -> str:
         self.get_root()
         self.grow()
